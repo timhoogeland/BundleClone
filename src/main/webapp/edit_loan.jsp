@@ -4,7 +4,7 @@
 <jsp:include page="parts/head.jsp" />
 
 <body >
-    
+
     <jsp:include page="parts/navigation.jsp" />
 
 	<main>
@@ -13,14 +13,14 @@
             <h1 id="title"></h1>
 
         </div>
-        
+
         <div class="buttonBlock">
         </div>
-        
+
         <div class="block">
             <form onsubmit="return false">
                 <ul class="flex-outer">
-                    
+
                     <li>
                         <label for="loan-type">Loan Type</label>
                         <select name="loan-type" id="loan-type">
@@ -65,7 +65,7 @@
         //retrieve data to fill form
         $(document).ready(function() {
             $.ajax({
-                url : "/bundlePWABackend/restservices/loan/"
+                url : "restservices/loan/"
                 + getParameterByName('id'),
                 type : "get",
 
@@ -95,7 +95,7 @@
             //post data when form is submitted
             $("form").submit(function() {
             $.ajax({
-					url : "/bundlePWABackend/restservices/loan/" + getParameterByName('id'),
+					url : "/restservices/loan/" + getParameterByName('id'),
 					type : "put",
 					data : $("form").serialize(),
 

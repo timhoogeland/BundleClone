@@ -13,36 +13,36 @@
 		<button class="buttonRound" onclick="toggleHide('helpPopup', false)">?</button>
 		<button class="buttonRound" onclick="window.location.href='edit_loan.jsp'">&#9998;</button>
 	</div>
-	
+
 	<div class="block">
        	<div id="mainLoader" class="loaderBlock">
        		<div class="loader"></div>
        	</div>
-		
+
 		<div class="blockHalf">
 			<h2>Personal information</h2>
 			<br>
-			
+
 			<div>
 				<label for="name"> <b>Name</b>
 				<button id="accountButton" class="buttonRound">&#8618;</button>
 				</label>
 				<h3 id="name">Loading...</h3>
 			</div>
-			
+
 			<div>
 				<label for="loantype"> <b>Group</b>
 				<button id="groupButton" class="buttonRound">&#8618;</button>
 				</label>
 				<h3 id="group">Loading...</h3>
 			</div>
-	
+
 			<div>
 				<label for="userstatus"> <b>Status</b>
 				</label>
 				<h3 id="status">Loading...</h3>
 			</div>
-			
+
 			<h2>Loan progress</h2>
 			<br>
 			<div id='statusDiv'>
@@ -50,13 +50,13 @@
 				</label>
 				<h3 id="loanstatus">Loading...</h3>
 			</div>
-			
+
 			<div>
 				<label for="amount"> <b>Amount</b>
 				</label>
 				<h3 id="amount">Loading...</h3>
 			</div>
-	
+
 			<div>
 				<label for="remaining"> <b>Paid Back</b>
 				</label>
@@ -64,42 +64,42 @@
 				<progress id="remainingBar"> </progress>
 			</div>
 		</div>
-	
+
 		<div class="blockHalf">
-	
+
 			<h2>Loan detail</h2>
 			<br>
-	
+
 			<div>
 				<label for="loantype"> <b>Loan type</b>
 				</label>
 				<h3 id="loantype">Loading...</h3>
 			</div>
-			
+
 			<div>
 				<label for="duration"> <b>Duration</b>
 				</label>
 				<h3 id="duration">Loading...</h3>
 			</div>
-	
+
 			<div>
 				<label for="duration"> <b>Start Date</b>
 				</label>
 				<h3 id="startdate">Loading...</h3>
 			</div>
-	
+
 			<div>
 				<label for="duration"> <b>Closing Date</b>
 				</label>
 				<h3 id="closingdate">Loading...</h3>
 			</div>
-			
+
 			<div>
 				<label for="description"> <b>Description</b>
 				</label>
 				<h3 id="description">Loading...</h3>
 			</div>
-			
+
 			<div>
 				<label for="contract"> <b>Contract</b>
 				</label>
@@ -108,7 +108,7 @@
 				<button id='contract' class="small" >Download</button>
 			</div>
 		</div>
-	
+
 		<div class="block blockUnderHalf">
 			<br>
 			<h2>Transactions</h2>
@@ -133,7 +133,7 @@
 		var hr = new XMLHttpRequest();
     	var id = getParameterByName("id");
 
-    	hr.open("GET", "/bundlePWABackend/restservices/transaction/loanid/" + id, true);
+    	hr.open("GET", "/restservices/transaction/loanid/" + id, true);
 
     	hr.onreadystatechange = function() {
     		if (hr.readyState == 4 && hr.status == 200) {
@@ -153,7 +153,7 @@
 							+ object[i].timestamp + '</td>';
 					table.appendChild(tr);
 				}
-				
+
 				if(datalength == 0){
 					var tr = document.createElement('tr');
 					tr.innerHTML = '<td style="text-align: center;" colspan=100%>No transactions found</td>';
@@ -165,12 +165,12 @@
     	}
     	hr.send(null);
 	}
-	
+
 	function getLoan() {
 		var hr = new XMLHttpRequest();
     	var id = getParameterByName("id");
 
-    	hr.open("GET", "/bundlePWABackend/restservices/loan/" + id, true);
+    	hr.open("GET", "/restservices/loan/" + id, true);
 
     	hr.onreadystatechange = function() {
     		if (hr.readyState == 4 && hr.status == 200) {
@@ -187,7 +187,7 @@
     			$('#closingdate').text(checkValue(loanData.closingdate));
     			$('#description').text(UCFirst(checkValue(loanData.description)));
     			$('#contract').attr("onclick", 'window.location.href="' + loanData.contractpdf + '"');
-    			
+
     			getUser(loanData.useridfk);
 
     		} else if (hr.readyState == 4) {
@@ -196,11 +196,11 @@
     	}
     	hr.send(null);
 	}
-	
+
 	function getUser(id) {
     	var hr = new XMLHttpRequest();
 
-    	hr.open("GET", "/bundlePWABackend/restservices/user/" + id, true);
+    	hr.open("GET", "/restservices/user/" + id, true);
 
     	hr.onreadystatechange = function() {
     		if (hr.readyState == 4 && hr.status == 200) {
@@ -211,7 +211,7 @@
     			$('#name').text(checkValue(userData[0].firstName + " " + userData[0].lastName));
     			$('#group').text(checkValue(loanData.groupid));
     			$('#groupButton').attr("onclick", 'window.location.href="group.jsp?id=' + loanData.groupid + '"');
-    			$('#status').text(UCFirst(checkValue(userData[0].status)));	
+    			$('#status').text(UCFirst(checkValue(userData[0].status)));
 
     		} else if (hr.readyState == 4) {
     			addNotification('Retrieving data failed with status ' + hr.status + '. Try again later.');

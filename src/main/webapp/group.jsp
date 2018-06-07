@@ -56,7 +56,7 @@
 	<script>
 		function getGroup() {
 			var hr = new XMLHttpRequest();
-			hr.open("GET", "/bundlePWABackend/restservices/loangroup/" + 1,
+			hr.open("GET", "/restservices/loangroup/" + 1,
 					true);
 
 			hr.onreadystatechange = function() {
@@ -92,7 +92,7 @@
 
 			$
 					.ajax({
-						url : "/bundlePWABackend/restservices/user/" + id,
+						url : "/restservices/user/" + id,
 						type : "get",
 
 						success : function(response) {

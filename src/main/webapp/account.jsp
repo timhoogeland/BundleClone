@@ -151,10 +151,10 @@
     	} else {
     		id = getParameterByName("id")
     	}
-    	
+
     	$('#edit').attr('onclick', "window.location.href='edit_account.jsp?id=" + id + "'");
-    	
-    	hr.open("GET", "/bundlePWABackend/restservices/user/" + id, true);
+
+    	hr.open("GET", "/restservices/user/" + id, true);
 
     	hr.onreadystatechange = function() {
     		if (hr.readyState == 4 && hr.status == 200) {
@@ -183,7 +183,7 @@
     			if (userData[0].userType == "applicant") {
     				$('#group').removeClass('hide');
     				var hr2 = new XMLHttpRequest();
-    				hr2.open("GET", "/bundlePWABackend/restservices/user/" + loanData.loanofficerid, true);
+    				hr2.open("GET", "/restservices/user/" + loanData.loanofficerid, true);
     				hr2.onreadystatechange = function() {
     					if (hr2.readyState == 4 && hr2.status == 200) {
     						$('#subLoader').fadeOut('fast');

@@ -348,7 +348,7 @@
         //retrieve data to fill form
         $(document).ready(function () {
             $.ajax({
-                url: "/bundlePWABackend/restservices/user/"
+                url: "/restservices/user/"
                     + getParameterByName('id'),
                 type: "get",
 
@@ -389,7 +389,7 @@
                 });
 
                 $.ajax({
-                    url: "/bundlePWABackend/restservices/user/" + getParameterByName('id'),
+                    url: "/restservices/user/" + getParameterByName('id'),
                     type: "put",
                     data: formData,
 
@@ -407,7 +407,7 @@
 
                 function updateAddressData(){
                     $.ajax({
-                    url: "/bundlePWABackend/restservices/address/" + addressidfk,
+                    url: "/restservices/address/" + addressidfk,
                     type: "put",
                     data: $("#address").serialize(),
 

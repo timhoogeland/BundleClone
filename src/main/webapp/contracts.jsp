@@ -19,7 +19,7 @@
 		<div id="mainLoader" class="loaderBlock">
         <div class="loader"></div>
     </div>
-    
+
 		<div id="contracts">
 			<table id='contractstable' class='contracts_table'>
 				<thead>
@@ -40,9 +40,9 @@
 	<jsp:include page="parts/footer.jsp" />
 	<script> function getContracts(){
 		var sessionToken = window.sessionStorage.getItem("sessionToken");
-		
+
 		$.ajax({
-			url: "/bundlePWABackend/restservices/loan",
+			url: "/restservices/loan",
 			type: "get",
 			beforeSend: function(xhr) {
 				xhr.setRequestHeader("Authorization",  "Bearer " + sessionToken);
