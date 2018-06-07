@@ -11,7 +11,7 @@
 	<div class="welcomeBlock">
 		<h1>Loan</h1>
 		<button class="buttonRound" onclick="toggleHide('helpPopup', false)">?</button>
-		<button class="buttonRound" onclick="window.location.href='edit_loan.jsp'">&#9998;</button>
+		<button id ="editButton" class="buttonRound" >&#9998;</button>
 	</div>
 
 	<div class="block">
@@ -207,10 +207,11 @@
     			$('#mainLoader').fadeOut('fast');
     			var userData = JSON.parse(hr.responseText);
     			var loanData = userData[0].loaninformation[0];
-
+						$('#editButton').attr("onclick", 'window.location.href="edit_loan.jsp?id=' + loanData.userid + '"');
     			$('#name').text(checkValue(userData[0].firstName + " " + userData[0].lastName));
+						$('#accountButton').attr("onclick", 'window.location.href="account.jsp?id=' + loanData.userid + '"');
     			$('#group').text(checkValue(loanData.groupid));
-    			$('#groupButton').attr("onclick", 'window.location.href="group.jsp?id=' + loanData.groupid + '"');
+    			$('#groupButton').attr("onclick", 'window.location.href="group.jsp?id=' + userData[0].groupid + '"');
     			$('#status').text(UCFirst(checkValue(userData[0].status)));
 
     		} else if (hr.readyState == 4) {
