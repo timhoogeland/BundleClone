@@ -57,7 +57,7 @@
 		function getGroup() {
 			var hr = new XMLHttpRequest();
 			var id = getParameterByName("id");
-			hr.open("GET", "/restservices/loangroup/" + ,
+			hr.open("GET", "/restservices/loangroup/" + id,
 					true);
 
 			hr.onreadystatechange = function() {
