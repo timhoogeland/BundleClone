@@ -207,12 +207,13 @@
     			$('#mainLoader').fadeOut('fast');
     			var userData = JSON.parse(hr.responseText);
     			var loanData = userData[0].loaninformation[0];
-						$('#editButton').attr("onclick", 'window.location.href="edit_loan.jsp?id=' + loanData.loanid + '"');
+
     			$('#name').text(checkValue(userData[0].firstName + " " + userData[0].lastName));
 						$('#accountButton').attr("onclick", 'window.location.href="account.jsp?id=' + userData[0].userid + '"');
     			$('#group').text(checkValue(loanData.groupid));
     			$('#groupButton').attr("onclick", 'window.location.href="group.jsp?id=' + loanData.groupid + '"');
     			$('#status').text(UCFirst(checkValue(userData[0].status)));
+						$('#editButton').attr("onclick", 'window.location.href="edit_loan.jsp?id=' + loanData.loanid + '"');
 
     		} else if (hr.readyState == 4) {
     			addNotification('Retrieving data failed with status ' + hr.status + '. Try again later.');
