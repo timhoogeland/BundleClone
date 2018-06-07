@@ -211,7 +211,7 @@
     			$('#name').text(checkValue(userData[0].firstName + " " + userData[0].lastName));
 						$('#accountButton').attr("onclick", 'window.location.href="account.jsp?id=' + userData[0].userid + '"');
     			$('#group').text(checkValue(loanData.groupid));
-    			$('#groupButton').attr("onclick", 'window.location.href="group.jsp?id=' + userData[0].groupid + '"');
+    			$('#groupButton').attr("onclick", 'window.location.href="group.jsp?id=' + loanData.groupid + '"');
     			$('#status').text(UCFirst(checkValue(userData[0].status)));
 
     		} else if (hr.readyState == 4) {
