@@ -24,7 +24,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import Objects.User;
+import PdfGenerator.RetrieveData;
 import Objects.UserLoanInformation;
+import Objects.UserWithAddress;
 import Services.AddressService;
 import Services.ServiceProvider;
 import Services.UserService;
@@ -33,11 +35,18 @@ import Services.UserService;
 public class UserResource {
     private UserService service = ServiceProvider.getUserService();
 
-    private JsonObjectBuilder buildJSON(User user) {
+    private JsonObjectBuilder buildJSON(UserWithAddress user) {
         JsonObjectBuilder job = Json.createObjectBuilder();
+        JsonObjectBuilder secondJob = Json.createObjectBuilder();
         JsonArrayBuilder secondJab = Json.createArrayBuilder();
-        //AddressService addressService = ServiceProvider.getAdressService();
-        AddressResource addressResource = new AddressResource();
+        secondJob.add("adressid", user.getAddressId())
+        	.add("street", user.getStreet())
+        	.add("number", user.getNumber())
+        	.add("country", user.getCountry())
+        	.add("postalcode", user.getPostalCode())
+        	.add("description", user.getDescription())
+        	.add("location", user.getLocation());
+        secondJab.add(secondJob);
         
         job.add("userid", user.getUserId());
         job.add("userType", user.getUserType());
@@ -45,20 +54,10 @@ public class UserResource {
         job.add("lastName", user.getLastname());
         job.add("phonenumber", user.getPhonenumber());
         job.add("status", user.getStatus());
-        job.add("addressIdFk", user.getAddressIdFk());
-        job.add("address", addressResource.getAdressByID(user.getAddressIdFk()));
+        job.add("addressInformation",secondJab);
         job.add("photo", user.getPhoto());
         job.add("dateofbirth", user.getDateOfBirth().toString());
         job.add("username", user.getUsername());
-        
-        for (UserLoanInformation u : service.getUserLoanInformation(user.getUserId())) {
-        	JsonObjectBuilder secondJob = Json.createObjectBuilder();
-        	secondJob.add("loanofficerid", u.getLoanOfficerId());
-        	secondJob.add("groupid", u.getGroupId());
-        	secondJob.add("loanid", u.getLoanId());
-        	
-        	secondJab.add(secondJob);
-        }
         job.add("loanInformation", secondJab);
         
         return job;
@@ -91,7 +90,7 @@ public class UserResource {
     public String getAccounts() {
         JsonArrayBuilder jab = Json.createArrayBuilder();
 
-        for (User u : service.getAllUsers()) {
+        for (UserWithAddress u : service.getAllUsers()) {
             jab.add(buildJSON(u));
         }
 
@@ -104,10 +103,24 @@ public class UserResource {
 //    @RolesAllowed({"beheerder","admin","user"})
     @Produces("application/json")
     public String getAccountByID(@PathParam("id") int id) {
-        User user = service.getUserByID(id);
+        UserWithAddress user = service.getUserByID(id);
         if(user != null) {
+        	JsonObjectBuilder job = Json.createObjectBuilder();
             JsonArrayBuilder jab = Json.createArrayBuilder();
-            jab.add(buildJSON(user));
+            JsonArrayBuilder secondJab = Json.createArrayBuilder();
+            
+            job = buildJSON(user);
+            for (UserLoanInformation u : service.getUserLoanInformation(user.getUserId())) {
+             	JsonObjectBuilder secondJob = Json.createObjectBuilder();
+             	secondJob.add("loanofficerid", u.getLoanOfficerId());
+             	secondJob.add("groupid", u.getGroupId());
+             	secondJob.add("loanid", u.getLoanId());
+             	
+             	secondJab.add(secondJob);
+             }
+            job.add("loaninformation", secondJab);
+            
+            jab.add(job);
             return jab.build().toString();
         }
         return Response.status(Response.Status.NOT_FOUND).toString();
@@ -122,9 +135,12 @@ public class UserResource {
                             @FormParam("password") String password,
     						@FormParam("addressidfk") int addressIdFk,
     						@FormParam("photo") String photo,
+
     						@FormParam("dateofbirth") String dateOfBirth) throws ParseException
     {
-    	
+    	RetrieveData data = new RetrieveData();
+    					
+
     	java.util.Date utilDateOfBirth = new SimpleDateFormat("yyyy-MM-dd").parse(dateOfBirth);
 		java.sql.Date sqlDateOfBirth = new java.sql.Date(utilDateOfBirth.getTime());
 		
@@ -143,11 +159,12 @@ public class UserResource {
 		password = result[0];
 		
 		String username = firstname + " " + lastname;
-		
-        User newUser = new User(0, userType, firstname, lastname, phonenumber, password, salt, status, addressIdFk, photo, sqlDateOfBirth, username);
-        User returnUser = service.newUser(newUser);
+
+        User newUser = new User(userType, firstname, lastname, phonenumber, password, salt, status, addressIdFk, photo, sqlDateOfBirth, username);
+        UserWithAddress returnUser = service.newUser(newUser);
         if (returnUser != null) {
-        	String a = buildJSON(newUser).build().toString();
+        	data.setUserData(newUser);
+        	String a = buildJSON(returnUser).build().toString();
             return Response.ok(a).build();
         } else {
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -162,7 +179,6 @@ public class UserResource {
     									@FormParam("firstname") String firstname,
     									@FormParam("lastname") String lastname,
     									@FormParam("phonenumber") int phonenumber,
-    									@FormParam("password") String password,
     									@FormParam("status") String status,
     									@FormParam("addressidfk") int addressIdFk,
     									@FormParam("photo") String photo,
@@ -171,15 +187,25 @@ public class UserResource {
     	{
     	java.util.Date utilDateOfBirth = new SimpleDateFormat("yyyy-MM-dd").parse(dateOfBirth);
     	java.sql.Date sqlDateOfBirth = new java.sql.Date(utilDateOfBirth.getTime());
-
-        
-        User user = new User(userId, userType, firstname, lastname, phonenumber, "", "", status, addressIdFk, photo, sqlDateOfBirth, username);
-            
-        User updatedUser = service.update(user);
-        if (updatedUser != null){
+    	
+    	UserWithAddress user = service.getUserByID(userId);
+    	
+    	if (user != null) {
+    		user.setUserType(userType);
+    		user.setFirsName(firstname);
+    		user.setLastname(lastname);
+    		user.setPhonenumber(phonenumber);
+    		user.setStatus(status);
+    		user.setAddressId(addressIdFk);
+    		user.setDateOfBirth(sqlDateOfBirth);
+    		user.setUserName(username);
+            UserWithAddress updatedUser = service.update(user);
         	String a = buildJSON(updatedUser).build().toString();
             return Response.ok(a).build();
-        } else {
+
+    	}
+            
+         else {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
@@ -199,4 +225,3 @@ public class UserResource {
         }
     }
 }
-

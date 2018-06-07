@@ -12,7 +12,7 @@
 		<li><a href="index.jsp">Home</a></li>
 		<li><a href="groups.jsp">Groups</a></li>
 		<li><a href="contracts.jsp">Contracts</a></li>
-		<li><a href="allaccounts.jsp">All Accounts (admin)</a></li>
+		<li><a href="allaccounts.jsp">All Accounts</a></li>
 		<li><a href="account.jsp">My Account</a></li>
 		<li id="login"><a href="login.jsp">Login</a></li>
 	</ul>

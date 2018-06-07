@@ -70,9 +70,9 @@ public class LoanGroupDAO extends baseDAO{
 		
 		public List<Integer> getAllLoanGroupsByLoanOfficers(int loanOfficerId){
 			List<Integer> resultslist = new ArrayList<Integer>();
-			String query = 	"select g.id as groupid" + 
-							" from public.group g" + 
-							" where g.loanofficeridfk = ?";
+			String query = 	"select g.id as groupid " + 
+							"from public.group g " + 
+							"where g.loanofficeridfk = ?";
 			
 			try(Connection con = super.getConnection()) {
 				PreparedStatement pstmt = con.prepareStatement(query);
